@@ -1,0 +1,46 @@
+db.createUser(
+    {
+        user: "testuser",
+        pwd: "p@55W0Rd",
+        roles: [
+            {
+                role: "readWrite",
+                db: "matches"
+            }
+        ]
+    }
+);
+
+db.auth('testuser', 'p@55W0Rd');
+
+db = db.getSiblingDB('matches');
+
+db.matches.insertMany([
+    {"display_name": "Caroline", "age": 41, "job_title": "Corporate Lawyer", "height_in_cm": 153, "city": { "name": "Leeds", "location": { "type": "Point", "coordinates": [53.801277, -1.548567] } }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.76, "contacts_exchanged": 2, "favourite": true, "religion": "Atheist"},
+    {"display_name": "Sharon", "age": 47, "job_title": "Doctor", "height_in_cm": 161, "city": { "name": "Solihull",  "location": {"type": "Point", "coordinates": [52.412811, -1.778197]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.97, "contacts_exchanged": 0, "favourite": false, "religion": "Islam"},
+    {"display_name": "Natalia", "age": 38, "job_title": "Project Manager", "height_in_cm": 144, "city": { "name": "Cardiff",  "location": {"type": "Point", "coordinates": [51.481583, -3.179090]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.47, "contacts_exchanged": 5, "favourite": false, "religion": "Christian"},
+    {"display_name": "Marta", "age": 55, "job_title": "Finance", "height_in_cm": 140, "city": { "name": "Eastbourne",  "location": {"type": "Point", "coordinates": [50.768036, 0.290472]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.95, "contacts_exchanged": 0, "favourite": false, "religion": "Agnostic"},
+    {"display_name": "Maria", "age": 43, "job_title": "CEO", "height_in_cm": 175, "city": { "name": "London",  "location": {"type": "Point", "coordinates": [51.509865, -0.118092]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.88, "contacts_exchanged": 0, "favourite": false, "religion": "Christian"},
+    {"display_name": "Stephanie","age": 39, "job_title": "Project Manager", "height_in_cm": 153, "city": { "name": "London",  "location": {"type": "Point", "coordinates": [51.509865, -0.118092]} }, "compatibility_score": 0.87, "contacts_exchanged": 4, "favourite": false,"religion": "Christian"},
+    {"display_name": "Claire","age": 48, "job_title": "GP", "height_in_cm": 167, "city": { "name": "London",  "location": {"type": "Point", "coordinates": [51.509865, -0.118092]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.83, "contacts_exchanged": 6,"favourite": false, "religion": "Atheist"},
+    {"display_name": "Colette", "age": 39, "job_title": "Doctor - Hospital", "height_in_cm": 177, "city": { "name": "Swindon",  "location": {"type": "Point", "coordinates": [51.568535, -1.772232]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.89,"contacts_exchanged": 2, "favourite": false, "religion": "Christian"},
+    {"display_name": "Caroline", "age": 43, "job_title": "Marketing Consultant", "height_in_cm": 160,"city": { "name": "Oxford",  "location": {"type": "Point", "coordinates": [51.752022, -1.257677]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif","compatibility_score": 0.91, "contacts_exchanged": 1, "favourite": false, "religion": "Atheist"},
+    {"display_name": "Kate", "age": 42, "job_title": "Psychologist","height_in_cm": 160, "city": { "name": "Salisbury",  "location": {"type": "Point", "coordinates": [51.068787, -1.794472]} },"main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.97, "contacts_exchanged": 10, "favourite": false, "religion": "Buddhist"},
+    {"display_name": "Katie", "age": 40, "job_title": "Lawyer", "height_in_cm": 148, "city": { "name": "Weymouth",  "location": {"type": "Point", "coordinates": [50.614429, -2.457621]} }, "compatibility_score": 0.94, "contacts_exchanged": 0, "favourite": false, "religion": "Atheist"},
+    {"display_name": "Clare", "age": 40, "job_title": "Accountant", "height_in_cm": 144, "city": { "name": "Bournemouth",  "location": {"type": "Point", "coordinates": [50.720806, -1.904755]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.90, "contacts_exchanged": 8, "favourite": false, "religion": "Christian"},
+    {"display_name": "Laura", "age": 39, "job_title": "Lawyer", "height_in_cm": 160, "city": { "name": "Plymouth",  "location": {"type": "Point", "coordinates": [50.376289, -4.143841]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.89, "contacts_exchanged": 0, "favourite": false, "religion": "Christian"},
+    {"display_name": "Katlin", "age": 39, "job_title": "Barrister", "height_in_cm": 153, "city": { "name": "Inverness",  "location": {"type": "Point", "coordinates": [57.477772, -4.224721]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.87, "contacts_exchanged": 0, "favourite": true, "religion": "Jewish"},
+    {"display_name": "Tracy", "age": 39, "job_title": "Lawyer", "height_in_cm": 153, "city": { "name": "Aberdeen",  "location": {"type": "Point", "coordinates": [57.149651, -2.099075]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.87, "contacts_exchanged": 0, "favourite": false, "religion": "Christian"},
+    {"display_name": "Angie", "age": 50, "job_title": "Accountant", "height_in_cm": 153, "city": { "name": "Ayr",  "location": {"type": "Point", "coordinates": [55.458565, -4.629179]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.93, "contacts_exchanged": 8, "favourite": true, "religion": "Atheist"},
+    {"display_name": "Samantha", "age": 32, "job_title": "Project Manager", "height_in_cm": 161, "city": { "name": "Belfast",  "location": {"type": "Point", "coordinates": [54.607868, -5.926437]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.89, "contacts_exchanged": 0, "favourite": false, "religion": "Christian"},
+    {"display_name": "Elizabeth", "age": 41, "job_title": "Dentist", "height_in_cm": 145, "city": { "name": "Londonderry",  "location": {"type": "Point", "coordinates": [55.006763, -7.318268]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.83, "contacts_exchanged": 4, "favourite": true, "religion": "Islam"},
+    {"display_name": "Emma", "age": 40, "job_title": "Banker", "height_in_cm": 150, "city": { "name": "Leeds",  "location": {"type": "Point", "coordinates": [53.801277, -1.548567]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.73, "contacts_exchanged": 0, "favourite": false, "religion": "Christian"},
+    {"display_name": "Diana", "age": 44, "job_title": "Consultant", "height_in_cm": 153, "city": { "name": "London",  "location": {"type": "Point", "coordinates": [51.509865, -0.118092]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.50, "contacts_exchanged": 0, "favourite": false, "religion": "Atheist"},
+    {"display_name": "Kysha","age": 45, "job_title": "Lawyer", "height_in_cm": 144, "city": { "name": "London",  "location": {"type": "Point", "coordinates": [51.509865, -0.118092]} }, "compatibility_score": 0.88, "contacts_exchanged": 10, "favourite": true,"religion": "Islam"},
+    {"display_name": "Anne","age": 38, "job_title": "Marketing Consultant", "height_in_cm": 170, "city": { "name": "Swindon",  "location": {"type": "Point", "coordinates": [51.568535, -1.772232]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.88, "contacts_exchanged": 0,"favourite": false, "religion": "Jewish"},
+    {"display_name": "Daniela", "age": 37, "job_title": "Doctor", "height_in_cm": 177, "city": { "name": "Bournemouth",  "location": {"type": "Point", "coordinates": [50.720806, -1.904755]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.76,"contacts_exchanged": 0, "favourite": false, "religion": "Christian"},
+    {"display_name": "Katherine", "age": 39, "job_title": "Lawyer", "height_in_cm": 177,"city": { "name": "London",  "location": {"type": "Point", "coordinates": [51.509865, -0.118092]} }, "main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif","compatibility_score": 0.99, "contacts_exchanged": 50, "favourite": true, "religion": "Atheist"},
+    {"display_name": "Susan", "age": 25, "job_title": "Project Manager","height_in_cm": 166, "city": { "name": "Harlow",  "location": {"type": "Point", "coordinates": [51.772938, 0.102310]} },"main_photo": "http://thecatapi.com/api/images/get?format=src&type=gif", "compatibility_score": 0.88, "contacts_exchanged": 0, "favourite": false, "religion": "Christian"}
+]);
+
+db.matches.createIndex({"city.location":"2dsphere"});
