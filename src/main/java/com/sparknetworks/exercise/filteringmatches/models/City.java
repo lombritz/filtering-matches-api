@@ -11,5 +11,5 @@ import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 @Data
 public class City {
   private String name;
-  @GeoSpatialIndexed(type = GEO_2DSPHERE, name = "location") private double[] location;
+  @GeoSpatialIndexed(type = GEO_2DSPHERE, name = "location") private Double[] location;
 }

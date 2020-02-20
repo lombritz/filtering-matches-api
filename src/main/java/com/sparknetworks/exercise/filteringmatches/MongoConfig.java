@@ -11,11 +11,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDbFactory;
 
 @Configuration
-public class MongoDBConfig extends AbstractMongoClientConfiguration {
+public class MongoConfig extends AbstractMongoClientConfiguration {
   private String database;
   private String uri;
 
-  public MongoDBConfig(
+  public MongoConfig(
       @Value("${spring.data.mongodb.database}") String database,
       @Value("${spring.data.mongodb.uri}") String uri) {
     this.database = database;

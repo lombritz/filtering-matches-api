@@ -7,14 +7,13 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
 
+import com.sparknetworks.exercise.filteringmatches.controllers.FilterMatchesRequest;
 import com.sparknetworks.exercise.filteringmatches.models.Match;
-import com.sparknetworks.exercise.filteringmatches.repositories.MatchesRepository;
 import java.util.List;
+import org.springframework.data.geo.Circle;
 import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.GeoResults;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.geo.Sphere;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -27,9 +26,13 @@ public class MatchesService {
     this.mongoTemplate = mongoTemplate;
   }
 
+  public List<Match> findAll() {
+    return mongoTemplate.findAll(Match.class);
+  }
+
   public List<Match> findMatchesByAgeRange(double minAge, double maxAge) {
     Query query = new Query();
-    query.addCriteria(where("age").lt(maxAge).gt(minAge));
+    query.addCriteria(where("age").lte(maxAge).gte(minAge));
 
     return mongoTemplate.find(query, Match.class);
   }
@@ -51,31 +54,22 @@ public class MatchesService {
     ofNullable(request.getHasPhoto())
         .ifPresent(hasPhoto -> criteria.and("main_photo").exists(hasPhoto));
     ofNullable(request.getInContact()).filter(c -> c)
-        .ifPresent(inContact -> criteria.and("contacts_exchanged").gte(1));
+        .ifPresent(inContact -> criteria.and("contacts_exchanged").gt(0));
     ofNullable(request.getFavourite())
         .ifPresent(favourite -> criteria.and("favourite").is(favourite));
     ofNullable(request.getRangeCompatibilityScore())
-        .ifPresent(score ->
-            criteria.and("compatibility_score")
-                .gte(score[0])
-                .lte(score[1]));
+        .ifPresent(score -> criteria.and("compatibility_score").gte(score[0]).lte(score[1]));
     ofNullable(request.getRangeAge())
-        .ifPresent(age ->
-            criteria.and("age")
-                .gte(age[0])
-                .lte(age[1]));
+        .ifPresent(age -> criteria.and("age").gte(age[0]).lte(age[1]));
     ofNullable(request.getRangeHeightInCm())
-        .ifPresent(height ->
-            criteria.and("height")
-                .gte(height[0])
-                .lte(height[1]));
+        .ifPresent(height -> criteria.and("height").gte(height[0]).lte(height[1]));
     ofNullable(request.getCoordinates())
         .ifPresent(coords ->
             ofNullable(request.getDistanceInKm())
                 .ifPresent(distanceInKm -> {
                   Distance distance = new Distance(distanceInKm, KILOMETERS);
-                  Sphere sphere = new Sphere(new Point(coords[0], coords[1]), distance);
-                  criteria.and("city.location").within(sphere);
+                  Circle circle = new Circle(new Point(coords[0], coords[1]), distance);
+                  criteria.and("city.location").withinSphere(circle);
                 }));
 
     return criteria;

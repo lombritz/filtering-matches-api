@@ -1,4 +1,4 @@
-package com.sparknetworks.exercise.filteringmatches.services;
+package com.sparknetworks.exercise.filteringmatches.controllers;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

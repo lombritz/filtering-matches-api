@@ -1,7 +1,6 @@
 package com.sparknetworks.exercise.filteringmatches.controllers;
 
 import com.sparknetworks.exercise.filteringmatches.models.Match;
-import com.sparknetworks.exercise.filteringmatches.services.FilterMatchesRequest;
 import com.sparknetworks.exercise.filteringmatches.services.MatchesService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
