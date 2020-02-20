@@ -5,4 +5,4 @@ EXPOSE 8080
 
 ADD target/filtering-matches*.jar /usr/share/filtering-matches/filtering-matches.jar
 
-ENTRYPOINT ["/usr/bin/java", "-jar", "/usr/share/filtering-matches/filtering-matches.jar"]
+ENTRYPOINT ["java", "-jar", "/usr/share/filtering-matches/filtering-matches.jar"]

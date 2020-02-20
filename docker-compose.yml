@@ -1,7 +1,8 @@
 version: "3"
 services:
   database:
-    image: 'mongo'
+    image: 'mongo:4.2.3'
+    restart: always
     container_name: mongo-matches-storage
     environment:
       - MONGO_INITDB_DATABASE=matches
@@ -9,17 +10,30 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=r00t
     volumes:
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-#      - ./mongo-volume:/data/db
+      - ./mongo-volume:/data/db
+    expose:
+      - 27017
     ports:
       - '27017-27019:27017-27019'
-
+    healthcheck:
+      test: "/usr/bin/mongo -u user -p userpass matches"
+      interval: 15s
+      timeout: 1s
+      retries: 5
   api:
     image: filtering-matches:latest
     restart: always
     build: .
+    environment:
+      SPRING_DATA_MONGODB_HOST: database
     expose:
       - 8080
     ports:
       - 8080:8080
     depends_on:
       - database
+    healthcheck:
+      test: "curl -f http://localhost:8080"
+      interval: 15s
+      timeout: 5s
+      retries: 5
