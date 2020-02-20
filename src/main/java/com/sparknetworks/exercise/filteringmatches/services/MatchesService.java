@@ -53,8 +53,14 @@ public class MatchesService {
 
     ofNullable(request.getHasPhoto())
         .ifPresent(hasPhoto -> criteria.and("main_photo").exists(hasPhoto));
-    ofNullable(request.getInContact()).filter(c -> c)
-        .ifPresent(inContact -> criteria.and("contacts_exchanged").gt(0));
+    ofNullable(request.getInContact())
+        .ifPresent(inContact -> {
+          if (inContact) {
+            criteria.and("contacts_exchanged").gt(0);
+          } else {
+            criteria.and("contacts_exchanged").is(0);
+          }
+        });
     ofNullable(request.getFavourite())
         .ifPresent(favourite -> criteria.and("favourite").is(favourite));
     ofNullable(request.getRangeCompatibilityScore())

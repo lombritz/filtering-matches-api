@@ -35,7 +35,7 @@ public class TestUtils {
     }
   }
 
-  public static Match.MatchBuilder randomMatch(int... cityIdx) {
+  public static Match.MatchBuilder randomMatch(int... cityIndex) {
     return Match.builder()
         .mainPhoto(randomPhoto())
         .displayName(randomDisplayName())
@@ -46,7 +46,7 @@ public class TestUtils {
         .jobTitle(randomJobTitle())
         .contactsExchanged(randomContactsExchanged())
         .compatibilityScore(randomCompatibilityScore())
-        .city(cityIdx.length > 0 ? randomCity(cityIdx[0]) : randomCity());
+        .city(randomCity(cityIndex));
   }
 
   private static City randomCity(int... idx) {
