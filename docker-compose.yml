@@ -21,7 +21,7 @@ services:
       timeout: 1s
       retries: 5
   api:
-    image: filtering-matches:latest
+    image: filtering-matches-api:latest
     restart: always
     build: .
     environment:
@@ -33,7 +33,7 @@ services:
     depends_on:
       - database
     healthcheck:
-      test: "curl -f http://localhost:8080"
+      test: 'curl -f http://api:8080/swagger-ui.html'
       interval: 15s
       timeout: 5s
       retries: 5
