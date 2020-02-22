@@ -15,21 +15,21 @@ public class FilterMatchesRequest {
   @ApiModelProperty(name = "In contact?", example = "false")
   private Boolean inContact;
 
-  @ApiModelProperty(name = "Favourite?", example = "true")
+  @ApiModelProperty(name = "Favourite?", example = "false")
   private Boolean favourite;
 
-  @ApiModelProperty(name = "Range: Compatibility score", example = "[ 0.70, 0.79 ]")
+  @ApiModelProperty(name = "Range: Compatibility score", example = "[ 0.90, 0.99 ]")
   private Double[] rangeCompatibilityScore;
 
-  @ApiModelProperty(name = "Range: Age", example = "[ 20, 30 ]")
+  @ApiModelProperty(name = "Range: Age", example = "[ 40, 50 ]")
   private Integer[] rangeAge;
 
-  @ApiModelProperty(name = "Range: Height (in cm)", example = "[ 180, 200 ]")
+  @ApiModelProperty(name = "Range: Height (in cm)", example = "[ 150, 190 ]")
   private Integer[] rangeHeightInCm;
 
-  @ApiModelProperty(name = "Coordinates", example = "[ 55.006763, -7.318268 ]")
+  @ApiModelProperty(name = "Coordinates", example = "[ 51.509865, -0.118092 ]")
   private Double[] coordinates;
 
-  @ApiModelProperty(name = "Distance (in km)", example = "25")
+  @ApiModelProperty(name = "Distance (in km)", example = "215")
   private Integer distanceInKm;
 }

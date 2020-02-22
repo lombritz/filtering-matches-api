@@ -3,18 +3,23 @@ package com.sparknetworks.exercise.filteringmatches.services;
 import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
 import static org.springframework.data.geo.Metrics.KILOMETERS;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.geoNear;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
+import static org.springframework.data.mongodb.core.query.NearQuery.near;
 
 
 import com.sparknetworks.exercise.filteringmatches.controllers.FilterMatchesRequest;
 import com.sparknetworks.exercise.filteringmatches.models.Match;
+import java.util.ArrayList;
 import java.util.List;
-import org.springframework.data.geo.Circle;
-import org.springframework.data.geo.Distance;
+import java.util.Optional;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.NearQuery;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
@@ -38,10 +43,21 @@ public class MatchesService {
   }
 
   public List<Match> findAll(FilterMatchesRequest request) {
-    Criteria criteria = buildCriteria(request);
-    Query query = query(criteria);
+    final List<AggregationOperation> aggs = new ArrayList<>();
+    buildNearQuery(request)
+        .map(nearQuery ->
+            aggs.add(geoNear(nearQuery, "distance_in_km"))
+        );
+    aggs.add(match(buildCriteria(request)));
 
-    return mongoTemplate.find(query, Match.class);
+    return mongoTemplate.aggregate(newAggregation(Match.class, aggs), Match.class).getMappedResults();
+  }
+
+  private Optional<NearQuery> buildNearQuery(FilterMatchesRequest request) {
+    return ofNullable(request.getCoordinates())
+        .map(coords -> new Point(coords[0], coords[1]))
+        .flatMap(point -> ofNullable(request.getDistanceInKm())
+            .map(distanceInKm -> near(point, KILOMETERS).maxDistance(distanceInKm)));
   }
 
   private Criteria buildCriteria(FilterMatchesRequest request) {
@@ -68,15 +84,7 @@ public class MatchesService {
     ofNullable(request.getRangeAge())
         .ifPresent(age -> criteria.and("age").gte(age[0]).lte(age[1]));
     ofNullable(request.getRangeHeightInCm())
-        .ifPresent(height -> criteria.and("height").gte(height[0]).lte(height[1]));
-    ofNullable(request.getCoordinates())
-        .ifPresent(coords ->
-            ofNullable(request.getDistanceInKm())
-                .ifPresent(distanceInKm -> {
-                  Distance distance = new Distance(distanceInKm, KILOMETERS);
-                  Circle circle = new Circle(new Point(coords[0], coords[1]), distance);
-                  criteria.and("city.location").withinSphere(circle);
-                }));
+        .ifPresent(height -> criteria.and("height_in_cm").gte(height[0]).lte(height[1]));
 
     return criteria;
   }

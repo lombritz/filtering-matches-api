@@ -36,6 +36,10 @@ public class Match {
   @ApiModelProperty(name = "City", example = "Miami")
   private City city;
 
+  @Field("distance_in_km")
+  @ApiModelProperty(name = "Distance in Km", example = "139.34")
+  private Double distanceInKm;
+
   @Field("main_photo")
   @ApiModelProperty(name = "Photo URL", example = "http://thecatapi.com/api/images/get?format=src&type=gif")
   private String mainPhoto;
