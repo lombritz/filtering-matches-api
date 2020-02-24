@@ -15,6 +15,14 @@ deleteTargetDir() {
   fi
 }
 
+deleteMongoVolDir() {
+  DEST_FOLDER="mongo-volume/"
+  if [ -d "$DEST_FOLDER" ]; then
+    echo "Delete '${DEST_FOLDER}' folder"
+    rm -R $DEST_FOLDER
+  fi
+}
+
 deleteContainerImages() {
   DOCKER_IMAGES=`docker images -q -f 'reference=filtering-matches-api*'`
   if [ "$DOCKER_IMAGES" != "" ]; then
@@ -48,6 +56,7 @@ fi
 if [ "$1" = "clean" ]; then
   stopContainer
   deleteTargetDir
+  deleteMongoVolDir
   deleteContainerImages
   exit 0
 fi
