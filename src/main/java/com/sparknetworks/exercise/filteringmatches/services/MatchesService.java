@@ -44,6 +44,11 @@ public class MatchesService {
 
   public List<Match> findAll(FilterMatchesRequest request) {
     final List<AggregationOperation> aggs = new ArrayList<>();
+
+    if (isNull(request)) {
+      return mongoTemplate.findAll(Match.class);
+    }
+
     buildNearQuery(request)
         .map(nearQuery ->
             aggs.add(geoNear(nearQuery, "distance_in_km"))

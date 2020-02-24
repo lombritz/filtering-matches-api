@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/matches")
+@RequestMapping("/api/matches")
 public class MatchesController {
   private MatchesService matchesService;
 
