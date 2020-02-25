@@ -11,6 +11,8 @@ import com.sparknetworks.exercise.filteringmatches.models.Match;
 import com.sparknetworks.exercise.filteringmatches.services.MatchesService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,6 +55,8 @@ public class MatchesServiceTests {
     mongoTemplate.insert(randomMatch(0)
         .mainPhoto(CAT_GIF).contactsExchanged(3).displayName("Rachel").age(40).compatibilityScore(0.83)
         .build());
+    mongoTemplate.getCollection("matches")
+        .createIndex(Document.parse("{ 'city.location' : '2dsphere' }"));
 
     this.matchesService = new MatchesService(mongoTemplate);
   }
@@ -72,7 +76,7 @@ public class MatchesServiceTests {
   }
 
   @Test
-  void test_FindByAllFilters() {
+  void test_FilterMatches() {
     print_GeneratedRandomMatches();
     FilterMatchesRequest request = FilterMatchesRequest.builder()
         .hasPhoto(true)

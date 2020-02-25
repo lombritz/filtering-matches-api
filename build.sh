@@ -66,12 +66,12 @@ if [ "$1" = "start" ]; then
   exit 0
 fi
 
-if [ "$1" = "tests" ]; then
-  ./mvnw clean tests
+if [ "$1" = "test" ]; then
+  ./mvnw clean test
   exit 0
 fi
 
-if [ "$1" = "integrationTests" ]; then
+if [ "$1" = "integrationTest" ]; then
   ./mvnw clean tests -Dspring.profiles.active=integration
   exit 0
 fi
