@@ -31,5 +31,5 @@ build/
 .vscode/
 
 ### Project files ###
-.mvn/
+.DS_Store
 mongo-volume/
