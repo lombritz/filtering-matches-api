@@ -1,9 +1,8 @@
-version: "3"
+version: "2.4"
 services:
   database:
     image: 'mongo:4.2.3'
     restart: always
-    container_name: mongo-matches-storage
     environment:
       - MONGO_INITDB_DATABASE=matches
       - MONGO_INITDB_ROOT_USERNAME=root
@@ -14,7 +13,9 @@ services:
     expose:
       - 27017
     ports:
-      - '27017-27019:27017-27019'
+      - 27017:27017
+      - 27018:27018
+      - 27019:27019
     healthcheck:
       test: "/usr/bin/mongo -u user -p userpass matches"
       interval: 15s
@@ -30,6 +31,8 @@ services:
       - 8080
     ports:
       - 8080:8080
+    links:
+      - database
     depends_on:
       - database
     healthcheck:

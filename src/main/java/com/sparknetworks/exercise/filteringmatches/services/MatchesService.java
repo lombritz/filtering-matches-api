@@ -6,12 +6,11 @@ import static org.springframework.data.geo.Metrics.KILOMETERS;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.geoNear;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.NearQuery.near;
 
 
-import com.sparknetworks.exercise.filteringmatches.controllers.FilterMatchesRequest;
 import com.sparknetworks.exercise.filteringmatches.models.Match;
+import com.sparknetworks.exercise.filteringmatches.requests.FilterMatchesRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +19,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.NearQuery;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,27 +33,19 @@ public class MatchesService {
     return mongoTemplate.findAll(Match.class);
   }
 
-  public List<Match> findMatchesByAgeRange(double minAge, double maxAge) {
-    Query query = new Query();
-    query.addCriteria(where("age").lte(maxAge).gte(minAge));
-
-    return mongoTemplate.find(query, Match.class);
-  }
-
-  public List<Match> findAll(FilterMatchesRequest request) {
-    final List<AggregationOperation> aggs = new ArrayList<>();
-
+  public List<Match> find(FilterMatchesRequest request) {
     if (isNull(request)) {
-      return mongoTemplate.findAll(Match.class);
+      return findAll();
     }
 
+    final List<AggregationOperation> operations = new ArrayList<>();
     buildNearQuery(request)
         .map(nearQuery ->
-            aggs.add(geoNear(nearQuery, "distance_in_km"))
+            operations.add(geoNear(nearQuery, "distance_in_km"))
         );
-    aggs.add(match(buildCriteria(request)));
+    operations.add(match(buildCriteria(request)));
 
-    return mongoTemplate.aggregate(newAggregation(Match.class, aggs), Match.class).getMappedResults();
+    return mongoTemplate.aggregate(newAggregation(Match.class, operations), Match.class).getMappedResults();
   }
 
   private Optional<NearQuery> buildNearQuery(FilterMatchesRequest request) {
@@ -67,7 +57,6 @@ public class MatchesService {
 
   private Criteria buildCriteria(FilterMatchesRequest request) {
     Criteria criteria = new Criteria();
-
     if (isNull(request)) {
       return criteria;
     }

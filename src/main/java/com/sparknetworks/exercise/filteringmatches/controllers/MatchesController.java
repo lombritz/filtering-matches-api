@@ -1,6 +1,7 @@
 package com.sparknetworks.exercise.filteringmatches.controllers;
 
 import com.sparknetworks.exercise.filteringmatches.models.Match;
+import com.sparknetworks.exercise.filteringmatches.requests.FilterMatchesRequest;
 import com.sparknetworks.exercise.filteringmatches.services.MatchesService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ public class MatchesController {
   public List<Match> getFilteredMatches(
       @RequestBody(required = false) FilterMatchesRequest request
   ) {
-    return matchesService.findAll(request);
+    return matchesService.find(request);
   }
 
 }

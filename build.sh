@@ -61,7 +61,7 @@ if [ "$1" = "clean" ]; then
   exit 0
 fi
 
-if [ "$1" = "start" ]; then
+if [ "$1" = "start" -o "$1" = "run" ]; then
   startContainer
   exit 0
 fi
@@ -72,7 +72,7 @@ if [ "$1" = "test" ]; then
 fi
 
 if [ "$1" = "integrationTest" ]; then
-  ./mvnw clean tests -Dspring.profiles.active=integration
+  ./mvnw clean verify -Pintegration
   exit 0
 fi
 

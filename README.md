@@ -9,13 +9,13 @@ The Filtering Matches API provides filtering features over a set of matches.
 
 #### Tests
 
-- `./build.sh tests` execute unit tests.
-- `./build.sh integrationTests` execute integration tests.
+- `./build.sh tests` runs unit tests.
+- `./build.sh integrationTests` runs integration tests.
 
 #### API Commands
 
-- `./build.sh start` start the API with necessary containers. 
-- `./build.sh stop` stop the API and all related containers 
+- `./build.sh start|run` starts the API and all required components. 
+- `./build.sh stop` stops the API and all related components.
 - `docker-compose logs --follow` follow the logs.
 
 #### Swagger Docs

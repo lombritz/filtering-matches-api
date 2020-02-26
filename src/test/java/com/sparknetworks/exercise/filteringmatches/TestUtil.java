@@ -4,11 +4,47 @@ import com.sparknetworks.exercise.filteringmatches.models.City;
 import com.sparknetworks.exercise.filteringmatches.models.Match;
 import java.util.Random;
 
-public class TestUtils {
+public class TestUtil {
   public static final String CAT_GIF = "http://thecatapi.com/api/images/get?format=src&type=gif";
   public static final String[] NAMES = new String[]{ "Lucia", "Jaime", "Luisana", "Michael", "Norma", "Lara", "Mary" };
   public static final String[] RELIGIONS = new String[]{ "Protestant", "Agnostic", "Catholic", "Christian", "Orthodox", "Islam", "Jewish", "Atheist" };
   public static final String[] JOB_TITLES = new String[]{ "Project Manager", "Developer", "Product Owner", "Analyst", "Supervisor", "Team Lead" };
+
+  public static final String HAS_PHOTO = "{\n" +
+      "  \"hasPhoto\": true\n" +
+      "}";
+  public static final String HAS_NO_PHOTO = "{\n" +
+      "  \"hasPhoto\": false\n" +
+      "}";
+  public static final String NEAR_LONDON = "{\n" +
+      "  \"coordinates\": [\n" +
+      "    51.509865,\n" +
+      "    -0.118092\n" +
+      "  ],\n" +
+      "  \"distanceInKm\": 215\n" +
+      "}";
+  public static final String FILTER_ALL_FIELDS = "{\n" +
+      "  \"coordinates\": [\n" +
+      "    51.509865,\n" +
+      "    -0.118092\n" +
+      "  ],\n" +
+      "  \"distanceInKm\": 215,\n" +
+      "  \"favourite\": false,\n" +
+      "  \"hasPhoto\": true,\n" +
+      "  \"inContact\": false,\n" +
+      "  \"rangeAge\": [\n" +
+      "    40,\n" +
+      "    50\n" +
+      "  ],\n" +
+      "  \"rangeCompatibilityScore\": [\n" +
+      "    0.9,\n" +
+      "    0.99\n" +
+      "  ],\n" +
+      "  \"rangeHeightInCm\": [\n" +
+      "    150,\n" +
+      "    190\n" +
+      "  ]\n" +
+      "}";
 
   public enum CityInfo {
     CARDIFF("Cardiff", new Double[] { 51.484198, -3.179248 }),

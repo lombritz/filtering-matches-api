@@ -1,54 +1,68 @@
 package com.sparknetworks.exercise.filteringmatches;
 
-import static com.sparknetworks.exercise.filteringmatches.TestUtils.CAT_GIF;
-import static com.sparknetworks.exercise.filteringmatches.TestUtils.CityInfo.LONDON;
-import static com.sparknetworks.exercise.filteringmatches.TestUtils.randomMatch;
+import static com.sparknetworks.exercise.filteringmatches.TestUtil.CAT_GIF;
+import static com.sparknetworks.exercise.filteringmatches.TestUtil.CityInfo.LONDON;
+import static com.sparknetworks.exercise.filteringmatches.TestUtil.randomMatch;
+import static de.flapdoodle.embed.mongo.distribution.Version.Main.PRODUCTION;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-import com.sparknetworks.exercise.filteringmatches.controllers.FilterMatchesRequest;
+import com.mongodb.MongoClient;
 import com.sparknetworks.exercise.filteringmatches.models.Match;
+import com.sparknetworks.exercise.filteringmatches.requests.FilterMatchesRequest;
 import com.sparknetworks.exercise.filteringmatches.services.MatchesService;
+import de.flapdoodle.embed.mongo.MongodExecutable;
+import de.flapdoodle.embed.mongo.MongodStarter;
+import de.flapdoodle.embed.mongo.config.IMongodConfig;
+import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
+import de.flapdoodle.embed.mongo.config.Net;
+import de.flapdoodle.embed.process.runtime.Network;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
-import org.bson.conversions.Bson;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+
+/**
+ * Unit tests for MatchesService, it runs against an in-memory MongoDB with fake test data.
+ */
 @Slf4j
-@DataMongoTest
-@ExtendWith(SpringExtension.class)
-public class MatchesServiceTests {
-  private MongoTemplate mongoTemplate;
+public class MatchesServiceTest {
+
+  private MongodExecutable mongodExecutable;
   private MatchesService matchesService;
 
-  @Autowired
-  public MatchesServiceTests(MongoTemplate mongoTemplate) {
-    this.mongoTemplate = mongoTemplate;
+  @AfterEach
+  void clean() {
+    mongodExecutable.stop();
   }
 
-  /**
-   * Insert test records to mongo DB and initialize MatchesService
-   */
   @BeforeEach
-  public void setup() {
-    mongoTemplate.getCollection("matches").drop();
+  void setup() throws Exception {
+    String ip = "localhost";
+    int port = 27017;
+
+    IMongodConfig mongodConfig = new MongodConfigBuilder().version(PRODUCTION)
+        .net(new Net(ip, port, Network.localhostIsIPv6()))
+        .build();
+
+    MongodStarter starter = MongodStarter.getDefaultInstance();
+    mongodExecutable = starter.prepare(mongodConfig);
+    mongodExecutable.start();
+    MongoTemplate mongoTemplate = new MongoTemplate(new MongoClient(ip, port), "test");
+
     mongoTemplate.insert(randomMatch().build());
     mongoTemplate.insert(randomMatch().build());
     mongoTemplate.insert(randomMatch().build());
     mongoTemplate.insert(randomMatch().build());
     mongoTemplate.insert(randomMatch().build());
     mongoTemplate.insert(randomMatch().build());
-    // at least 2 records must match the FindByAge test criteria
     mongoTemplate.insert(randomMatch().age(36).build());
     mongoTemplate.insert(randomMatch().age(40).build());
-    // at least 2 records must match the FindByAllFilters test criteria
     mongoTemplate.insert(randomMatch(0)
         .mainPhoto(CAT_GIF).contactsExchanged(2).displayName("Robert").age(31).compatibilityScore(0.89)
         .build());
@@ -57,7 +71,6 @@ public class MatchesServiceTests {
         .build());
     mongoTemplate.getCollection("matches")
         .createIndex(Document.parse("{ 'city.location' : '2dsphere' }"));
-
     this.matchesService = new MatchesService(mongoTemplate);
   }
 
@@ -67,16 +80,9 @@ public class MatchesServiceTests {
         .forEach(log::info);
   }
 
+  @DisplayName("Test MatchesService.find(request)")
   @Test
-  void test_FindByAge() {
-    print_GeneratedRandomMatches();
-    List<Match> results = matchesService.findMatchesByAgeRange(35, 40);
-
-    assertTrue(results.size() >= 2);
-  }
-
-  @Test
-  void test_FilterMatches() {
+  public void test_FilterMatches() {
     print_GeneratedRandomMatches();
     FilterMatchesRequest request = FilterMatchesRequest.builder()
         .hasPhoto(true)
@@ -85,8 +91,8 @@ public class MatchesServiceTests {
         .rangeCompatibilityScore(new Double[]{ 0.80, 0.89 })
         .distanceInKm(350).coordinates(LONDON.getCoordinates())
         .build();
-    List<Match> results = matchesService.findAll(request);
+    List<Match> results = matchesService.find(request);
 
-    assertTrue(results.size() >= 2);
+    assertTrue(results.size() >= 2, "Failed to find at least 2 records!");
   }
 }
